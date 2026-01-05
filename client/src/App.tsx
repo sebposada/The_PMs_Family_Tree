@@ -4,32 +4,41 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
+import Landing from "./pages/Landing";
+import Signup from "./pages/Signup";
+import Onboarding from "./pages/Onboarding";
+import Pending from "./pages/Pending";
+import Directory from "./pages/Directory";
+import PersonDetail from "./pages/PersonDetail";
+import Tree from "./pages/Tree";
+import Photos from "./pages/Photos";
+import About from "./pages/About";
+import Admin from "./pages/Admin";
 
 function Router() {
-  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/404"} component={NotFound} />
+      <Route path="/" component={Landing} />
+      <Route path="/signup" component={Signup} />
+      <Route path="/onboarding" component={Onboarding} />
+      <Route path="/pending" component={Pending} />
+      <Route path="/directory" component={Directory} />
+      <Route path="/people/:id" component={PersonDetail} />
+      <Route path="/tree" component={Tree} />
+      <Route path="/photos" component={Photos} />
+      <Route path="/about" component={About} />
+      <Route path="/admin" component={Admin} />
+      <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
   );
 }
 
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
-
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
+      <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <Toaster />
           <Router />
