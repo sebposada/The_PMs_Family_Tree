@@ -158,3 +158,8 @@
 - [x] Test tree displays with clear generational rows
 - [x] Clean up test data from database
 - [x] Tree now displays 59 real family members in generational hierarchy
+
+## Bug Fix: Duplicate React Key Error
+- [x] Investigate admin page for duplicate person-91 key
+- [x] Fix duplicate key issue in admin component (added deduplication to PeopleManagement, PartnershipsManagement, MediaManagement)
+- [x] Test admin page to verify error is resolved (all tabs tested, no console errors, 44 tests passing)

@@ -22,7 +22,15 @@ export function MediaManagement() {
   const [taggingMedia, setTaggingMedia] = useState<any>(null);
 
   const { data: media, isLoading } = trpc.media.getAll.useQuery();
-  const { data: people } = trpc.people.getAll.useQuery();
+  const { data: peopleData } = trpc.people.getAll.useQuery();
+
+  // Deduplicate people by ID to prevent duplicate key errors
+  const people = peopleData?.reduce((acc, person) => {
+    if (!acc.find((p) => p.id === person.id)) {
+      acc.push(person);
+    }
+    return acc;
+  }, [] as typeof peopleData);
 
   return (
     <div className="space-y-6">

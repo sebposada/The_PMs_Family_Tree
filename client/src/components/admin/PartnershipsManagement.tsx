@@ -31,8 +31,16 @@ export function PartnershipsManagement() {
   const [managingChildren, setManagingChildren] = useState<any>(null);
 
   const { data: partnerships, isLoading } = trpc.partnerships.getAll.useQuery();
-  const { data: people } = trpc.people.getAll.useQuery();
+  const { data: peopleData } = trpc.people.getAll.useQuery();
   const utils = trpc.useUtils();
+
+  // Deduplicate people by ID to prevent duplicate key errors
+  const people = peopleData?.reduce((acc, person) => {
+    if (!acc.find((p) => p.id === person.id)) {
+      acc.push(person);
+    }
+    return acc;
+  }, [] as typeof peopleData);
 
   const deleteMutation = trpc.partnerships.delete.useMutation({
     onSuccess: () => {

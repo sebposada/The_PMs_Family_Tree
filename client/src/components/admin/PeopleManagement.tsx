@@ -37,7 +37,15 @@ export function PeopleManagement() {
     },
   });
 
-  const filteredPeople = people?.filter((person) => {
+  // Deduplicate people by ID to prevent duplicate key errors
+  const uniquePeople = people?.reduce((acc, person) => {
+    if (!acc.find((p) => p.id === person.id)) {
+      acc.push(person);
+    }
+    return acc;
+  }, [] as typeof people);
+
+  const filteredPeople = uniquePeople?.filter((person) => {
     const query = searchQuery.toLowerCase();
     return (
       person.firstName.toLowerCase().includes(query) ||

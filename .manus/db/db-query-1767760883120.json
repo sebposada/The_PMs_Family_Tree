@@ -1,0 +1,15 @@
+{
+  "query": "SELECT id, firstName, lastName FROM people WHERE id = 91",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 1ojTzELK7uqzVV4.root --database e59sCeDZ8CcqgFJitnrJ4q --execute SELECT id, firstName, lastName FROM people WHERE id = 91",
+  "rows": [
+    {
+      "id": "91",
+      "firstName": "Diana",
+      "lastName": "Prince"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfirstName\tlastName\n91\tDiana\tPrince\n",
+  "stderr": "",
+  "execution_time_ms": 413
+}

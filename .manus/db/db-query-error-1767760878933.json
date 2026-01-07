@@ -1,0 +1,8 @@
+{
+  "query": "SELECT id, first_name, last_name FROM people WHERE id = 91",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 1ojTzELK7uqzVV4.root --database e59sCeDZ8CcqgFJitnrJ4q --execute SELECT id, first_name, last_name FROM people WHERE id = 91",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'first_name' in 'field list'"
+  ]
+}
