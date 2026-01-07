@@ -1,13 +1,21 @@
-import { useState, useMemo } from 'react';
-import { FamilyTree, BasicPersonCard } from '@alexbrand09/famtreejs';
-import '@alexbrand09/famtreejs/styles.css';
-import type { FamilyTreeData, NodeComponentProps } from '@alexbrand09/famtreejs';
+import { useState, useMemo, useCallback, useEffect } from 'react';
+import ReactFlow, {
+  Node,
+  Edge,
+  Background,
+  Controls,
+  MiniMap,
+  useNodesState,
+  useEdgesState,
+} from 'reactflow';
+import 'reactflow/dist/style.css';
 import { trpc } from '../lib/trpc';
 import { useAuth } from '../_core/hooks/useAuth';
 import { getLoginUrl } from '../const';
 import { Link } from 'wouter';
 
 interface PersonData {
+  id: number;
   firstName: string;
   lastName: string;
   birthDate?: Date | string | null;
@@ -15,8 +23,8 @@ interface PersonData {
   primaryPhotoUrl?: string | null;
 }
 
-// Custom person card component matching our design
-function CustomPersonCard({ data, isSelected, isHovered }: NodeComponentProps<PersonData>) {
+// Custom person node component
+function PersonNode({ data }: { data: PersonData }) {
   const birthYear = data.birthDate ? new Date(data.birthDate).getFullYear() : null;
   const deathYear = data.deathDate ? new Date(data.deathDate).getFullYear() : null;
   
@@ -27,15 +35,9 @@ function CustomPersonCard({ data, isSelected, isHovered }: NodeComponentProps<Pe
     : '';
 
   return (
-    <div
-      className={`
-        w-[180px] bg-white rounded-lg shadow-md border-2 transition-all
-        ${isSelected ? 'border-[#3D5A40] shadow-lg' : 'border-[#3D5A40]/20'}
-        ${isHovered ? 'shadow-xl scale-105' : ''}
-      `}
-    >
+    <div className="w-[160px] bg-white rounded-lg shadow-md border-2 border-[#3D5A40]/20 hover:border-[#3D5A40] hover:shadow-lg transition-all">
       {/* Photo */}
-      <div className="relative w-full h-[120px] bg-[#E8EDE9] rounded-t-lg overflow-hidden">
+      <div className="relative w-full h-[100px] bg-[#E8EDE9] rounded-t-lg overflow-hidden">
         {data.primaryPhotoUrl ? (
           <img
             src={data.primaryPhotoUrl}
@@ -45,7 +47,7 @@ function CustomPersonCard({ data, isSelected, isHovered }: NodeComponentProps<Pe
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <svg
-              className="w-16 h-16 text-[#3D5A40]/30"
+              className="w-12 h-12 text-[#3D5A40]/30"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -60,51 +62,160 @@ function CustomPersonCard({ data, isSelected, isHovered }: NodeComponentProps<Pe
       </div>
 
       {/* Info */}
-      <div className="p-3">
-        <h3 className="font-semibold text-[#3D5A40] text-sm truncate">
+      <div className="p-2">
+        <h3 className="font-semibold text-[#3D5A40] text-xs truncate">
           {data.firstName} {data.lastName}
         </h3>
         {dateRange && (
-          <p className="text-xs text-[#5A6B5F] mt-1">{dateRange}</p>
+          <p className="text-[10px] text-[#5A6B5F] mt-1">{dateRange}</p>
         )}
       </div>
     </div>
   );
 }
 
+const nodeTypes = {
+  person: PersonNode,
+};
+
 export default function Tree() {
   const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
 
   // Fetch data
-  const { data: people = [] } = trpc.people.getAll.useQuery();
-  const { data: partnerships = [] } = trpc.partnerships.getAll.useQuery();
-  const { data: partnershipChildren = [] } = trpc.partnerships.getAllChildren.useQuery();
+  const { data: people = [], isLoading: peopleLoading } = trpc.people.getAll.useQuery();
+  const { data: partnerships = [], isLoading: partnershipsLoading } = trpc.partnerships.getAll.useQuery();
+  const { data: partnershipChildren = [], isLoading: childrenLoading } = trpc.partnerships.getAllChildren.useQuery();
 
-  // Transform data to famtreejs format
-  const treeData: FamilyTreeData<PersonData> | null = useMemo(() => {
-    if (!people.length || !partnerships.length) return null;
+  console.log('Tree data:', { people: people.length, partnerships: partnerships.length, children: partnershipChildren.length });
+  console.log('Loading states:', { peopleLoading, partnershipsLoading, childrenLoading });
 
-    return {
-      people: people.map(p => ({
-        id: p.id.toString(),
-        data: {
-          firstName: p.firstName,
-          lastName: p.lastName,
-          birthDate: p.birthDate,
-          deathDate: p.deathDate,
-          primaryPhotoUrl: p.primaryPhotoUrl,
-        },
-      })),
-      partnerships: partnerships.map(ps => ({
-        id: ps.id.toString(),
-        partnerIds: [ps.partner1Id.toString(), ps.partner2Id.toString()],
-        childIds: partnershipChildren
-          .filter((pc: any) => pc.partnershipId === ps.id)
-          .map((pc: any) => pc.childId.toString()),
-      })),
+  // Build tree layout
+  const { nodes: initialNodes, edges: initialEdges } = useMemo(() => {
+    console.log('useMemo triggered, people.length:', people.length);
+    if (!people.length) {
+      console.log('No people, returning empty nodes');
+      return { nodes: [], edges: [] };
+    }
+
+    const nodes: Node[] = [];
+    const edges: Edge[] = [];
+
+    // Create a map of person ID to their partnerships
+    const personToPartnerships = new Map<number, number[]>();
+    partnerships.forEach(ps => {
+      if (!personToPartnerships.has(ps.partner1Id)) {
+        personToPartnerships.set(ps.partner1Id, []);
+      }
+      if (!personToPartnerships.has(ps.partner2Id)) {
+        personToPartnerships.set(ps.partner2Id, []);
+      }
+      personToPartnerships.get(ps.partner1Id)!.push(ps.id);
+      personToPartnerships.get(ps.partner2Id)!.push(ps.id);
+    });
+
+    // Create a map of person ID to their children
+    const personToChildren = new Map<number, number[]>();
+    partnershipChildren.forEach((pc: any) => {
+      const partnership = partnerships.find(p => p.id === pc.partnershipId);
+      if (partnership) {
+        if (!personToChildren.has(partnership.partner1Id)) {
+          personToChildren.set(partnership.partner1Id, []);
+        }
+        if (!personToChildren.has(partnership.partner2Id)) {
+          personToChildren.set(partnership.partner2Id, []);
+        }
+        personToChildren.get(partnership.partner1Id)!.push(pc.childId);
+        personToChildren.get(partnership.partner2Id)!.push(pc.childId);
+      }
+    });
+
+    // Find root people (those who are not children of any partnership)
+    const allChildrenIds = new Set(partnershipChildren.map((pc: any) => pc.childId));
+    const rootPeople = people.filter(p => !allChildrenIds.has(p.id));
+
+    // Simple grid layout
+    let currentY = 0;
+    const GENERATION_GAP = 250;
+    const SIBLING_GAP = 200;
+    const processedPeople = new Set<number>();
+
+    // Process people generation by generation
+    const processGeneration = (peopleInGeneration: typeof people, y: number) => {
+      let x = 0;
+      
+      peopleInGeneration.forEach((person, index) => {
+        if (processedPeople.has(person.id)) return;
+        
+        processedPeople.add(person.id);
+        
+        // Add person node
+        nodes.push({
+          id: `person-${person.id}`,
+          type: 'person',
+          position: { x, y },
+          data: person,
+        });
+
+        // Find their children for next generation
+        const children = personToChildren.get(person.id) || [];
+        children.forEach(childId => {
+          edges.push({
+            id: `edge-${person.id}-${childId}`,
+            source: `person-${person.id}`,
+            target: `person-${childId}`,
+            type: 'smoothstep',
+            style: { stroke: '#3D5A40', strokeWidth: 2 },
+          });
+        });
+
+        x += SIBLING_GAP;
+      });
+
+      // Return children for next generation
+      const nextGen = new Set<number>();
+      peopleInGeneration.forEach(person => {
+        const children = personToChildren.get(person.id) || [];
+        children.forEach(childId => nextGen.add(childId));
+      });
+      
+      return Array.from(nextGen).map(id => people.find(p => p.id === id)!).filter(Boolean);
     };
+
+    // Start with root generation
+    let currentGeneration = rootPeople;
+    while (currentGeneration.length > 0) {
+      currentGeneration = processGeneration(currentGeneration, currentY);
+      currentY += GENERATION_GAP;
+    }
+
+    // Add any remaining people who weren't connected
+    let x = 0;
+    people.forEach(person => {
+      if (!processedPeople.has(person.id)) {
+        nodes.push({
+          id: `person-${person.id}`,
+          type: 'person',
+          position: { x, y: currentY },
+          data: person,
+        });
+        x += SIBLING_GAP;
+      }
+    });
+
+    console.log('Generated nodes:', nodes.length, 'edges:', edges.length);
+    return { nodes, edges };
   }, [people, partnerships, partnershipChildren]);
+
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  // Update nodes and edges when data changes
+  useEffect(() => {
+    console.log('useEffect: updating nodes and edges', initialNodes.length, initialEdges.length);
+    setNodes(initialNodes);
+    setEdges(initialEdges);
+  }, [initialNodes, initialEdges, setNodes, setEdges]);
 
   // Search functionality
   const filteredPeople = useMemo(() => {
@@ -114,6 +225,10 @@ export default function Tree() {
       `${p.firstName} ${p.lastName}`.toLowerCase().includes(query)
     );
   }, [people, searchQuery]);
+
+  const onNodeClick = useCallback((_event: any, node: Node) => {
+    console.log('Clicked node:', node);
+  }, []);
 
   if (!user) {
     return (
@@ -164,7 +279,6 @@ export default function Tree() {
                     key={person.id}
                     className="w-full px-4 py-2 text-left hover:bg-[#E8EDE9] transition-colors"
                     onClick={() => {
-                      // Center on this person
                       setSearchQuery('');
                     }}
                   >
@@ -185,25 +299,24 @@ export default function Tree() {
       </header>
 
       {/* Tree Visualization */}
-      <div className="flex-1 relative">
-        {treeData ? (
-          <FamilyTree
-            data={treeData}
-            nodeComponent={CustomPersonCard}
-            orientation="top-down"
-            theme="light"
-            spacing={{
-              generation: 300,
-              siblings: 100,
-              partners: 60,
-            }}
-            initialZoom={0.8}
-            minZoom={0.3}
+      <div className="flex-1">
+        {nodes.length > 0 ? (
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onNodeClick={onNodeClick}
+            nodeTypes={nodeTypes}
+            fitView
+            minZoom={0.1}
             maxZoom={2}
-            onPersonClick={(id, data) => {
-              console.log('Clicked person:', id, data);
-            }}
-          />
+            defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
+          >
+            <Background />
+            <Controls />
+            <MiniMap nodeColor="#3D5A40" />
+          </ReactFlow>
         ) : (
           <div className="flex items-center justify-center h-full">
             <div className="text-center">

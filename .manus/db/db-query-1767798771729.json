@@ -1,0 +1,75 @@
+{
+  "query": "SELECT id, firstName, lastName FROM people WHERE firstName IN ('Test', 'Updated', 'Partner', 'Single', 'Parent', 'Child', 'Tagged', 'Untagged') OR lastName IN ('Person', 'Name', 'One', 'Two', 'Three', 'Four');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 1ojTzELK7uqzVV4.root --database e59sCeDZ8CcqgFJitnrJ4q --execute SELECT id, firstName, lastName FROM people WHERE firstName IN ('Test', 'Updated', 'Partner', 'Single', 'Parent', 'Child', 'Tagged', 'Untagged') OR lastName IN ('Person', 'Name', 'One', 'Two', 'Three', 'Four');",
+  "rows": [
+    {
+      "id": "90018",
+      "firstName": "Test",
+      "lastName": "Person"
+    },
+    {
+      "id": "90020",
+      "firstName": "Updated",
+      "lastName": "Name"
+    },
+    {
+      "id": "90023",
+      "firstName": "Partner",
+      "lastName": "One"
+    },
+    {
+      "id": "90025",
+      "firstName": "Partner",
+      "lastName": "Two"
+    },
+    {
+      "id": "90026",
+      "firstName": "Single",
+      "lastName": "Person"
+    },
+    {
+      "id": "90027",
+      "firstName": "Parent",
+      "lastName": "One"
+    },
+    {
+      "id": "90028",
+      "firstName": "Parent",
+      "lastName": "Two"
+    },
+    {
+      "id": "90029",
+      "firstName": "Child",
+      "lastName": "One"
+    },
+    {
+      "id": "90030",
+      "firstName": "Parent",
+      "lastName": "Three"
+    },
+    {
+      "id": "90031",
+      "firstName": "Parent",
+      "lastName": "Four"
+    },
+    {
+      "id": "90032",
+      "firstName": "Child",
+      "lastName": "Two"
+    },
+    {
+      "id": "90033",
+      "firstName": "Tagged",
+      "lastName": "Person"
+    },
+    {
+      "id": "90034",
+      "firstName": "Untagged",
+      "lastName": "Person"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tfirstName\tlastName\n90018\tTest\tPerson\n90020\tUpdated\tName\n90023\tPartner\tOne\n90025\tPartner\tTwo\n90026\tSingle\tPerson\n90027\tParent\tOne\n90028\tParent\tTwo\n90029\tChild\tOne\n90030\tParent\tThree\n90031\tParent\tFour\n90032\tChild\tTwo\n90033\tTagged\tPerson\n90034\tUntagged\tPerson\n",
+  "stderr": "",
+  "execution_time_ms": 395
+}
