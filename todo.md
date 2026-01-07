@@ -84,3 +84,15 @@
 
 ## Current Issues
 - [x] Fix nested anchor tag error in Directory page (Navigation component had nested <a> tags inside <Link>)
+
+## Admin Content Management System
+- [x] Build people CRUD interface (create, edit, delete forms)
+- [x] Add people list view with search and filters
+- [x] Build partnerships management interface
+- [x] Implement children assignment to partnerships
+- [x] Create media upload form with S3 integration
+- [x] Add photo tagging interface (tag people in photos)
+- [x] Implement primary photo selection for people
+- [x] Add media gallery management view
+- [x] Test all CRUD operations (37 tests passing)
+- [x] Integrate all management tabs into Admin page

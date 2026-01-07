@@ -1,312 +1,303 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Navigation } from "@/components/Navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RouteGuard } from "@/components/RouteGuard";
 import { trpc } from "@/lib/trpc";
-import { Users, UserCheck, User, Image as ImageIcon, MessageCircle, Download, Trash2, Check } from "lucide-react";
+import { Check, Download, Image as ImageIcon, MessageSquare, Users, User } from "lucide-react";
 import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { PeopleManagement } from "@/components/admin/PeopleManagement";
+import { PartnershipsManagement } from "@/components/admin/PartnershipsManagement";
+import { MediaManagement } from "@/components/admin/MediaManagement";
 
 function AdminContent() {
-  const utils = trpc.useUtils();
   const { data: stats, isLoading: statsLoading } = trpc.stats.get.useQuery();
-  const { data: unapprovedUsers, isLoading: usersLoading } = trpc.users.getUnapproved.useQuery();
-  const { data: recentComments, isLoading: commentsLoading } = trpc.comments.getRecent.useQuery({ limit: 20 });
+  const { data: unapprovedUsers } = trpc.users.getUnapproved.useQuery();
+  const { data: recentComments } = trpc.comments.getRecent.useQuery({ limit: 10 });
 
+  const utils = trpc.useUtils();
   const approveMutation = trpc.users.approve.useMutation({
     onSuccess: () => {
+      toast.success("User approved successfully");
       utils.users.getUnapproved.invalidate();
       utils.stats.get.invalidate();
-      toast.success("User approved successfully");
     },
-    onError: (err) => {
-      toast.error(err.message || "Failed to approve user");
+    onError: (error) => {
+      toast.error(error.message || "Failed to approve user");
     },
   });
 
   const deleteCommentMutation = trpc.comments.delete.useMutation({
     onSuccess: () => {
+      toast.success("Comment deleted successfully");
       utils.comments.getRecent.invalidate();
       utils.stats.get.invalidate();
-      toast.success("Comment deleted successfully");
     },
-    onError: (err) => {
-      toast.error(err.message || "Failed to delete comment");
+    onError: (error) => {
+      toast.error(error.message || "Failed to delete comment");
     },
   });
 
-  const handleApprove = (userId: number) => {
-    approveMutation.mutate({ userId });
-  };
+  const handleExport = async () => {
+    try {
+      // Fetch all data
+      const people = await utils.client.people.getAll.query();
+      const partnerships = await utils.client.partnerships.getAll.query();
+      const media = await utils.client.media.getAll.query();
+      const users = await utils.client.users.getAll.query();
 
-  const handleDeleteComment = (commentId: number) => {
-    if (confirm("Are you sure you want to delete this comment?")) {
-      deleteCommentMutation.mutate({ id: commentId });
+      const exportData = {
+        exportDate: new Date().toISOString(),
+        people,
+        partnerships,
+        media: media.map((m) => ({
+          ...m,
+          note: "Download actual files from S3 using the fileKey",
+        })),
+        users: users.map((u) => ({
+          id: u.user.id,
+          email: u.user.email,
+          name: u.user.name,
+          role: u.user.role,
+        })),
+      };
+
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `family-archive-export-${new Date().toISOString().split("T")[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      toast.success("Data exported successfully");
+    } catch (error) {
+      console.error("Export error:", error);
+      toast.error("Failed to export data");
     }
-  };
-
-  const handleExport = () => {
-    // TODO: Implement JSON export
-    toast.info("Export feature coming soon");
   };
 
   return (
     <>
       <Navigation />
-      <div className="min-h-screen bg-[#FAF7F2]">
-      {/* Header */}
-      <header className="border-b border-[#3D5A40]/10 bg-white/50 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-6">
-          <h1 className="text-3xl font-serif font-bold text-[#2C3E3C]">Admin Dashboard</h1>
-          <p className="text-[#5A6B5F] mt-1">Manage users, content, and family archive</p>
-        </div>
-      </header>
+      <div className="min-h-screen bg-[#FAF9F6]">
+        <main className="container mx-auto px-4 py-8">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-4xl font-serif font-bold text-[#2C3E3C] mb-2">Admin Dashboard</h1>
+            <p className="text-[#5A6B5F]">Manage users, content, and family data</p>
+          </div>
 
-      <main className="container mx-auto px-4 py-8">
-        {/* Stats Strip */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-          <Card className="bg-white border-[#3D5A40]/10 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-[#5A6B5F] flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                Total Users
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-[#2C3E3C]">
-                {statsLoading ? "..." : stats?.totalUsers ?? 0}
-              </div>
-            </CardContent>
-          </Card>
+          {/* Stats */}
+          {statsLoading ? (
+            <div className="text-center py-8 text-[#5A6B5F]">Loading stats...</div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              <Card className="polaroid-card">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-[#3D5A40]/10 rounded-lg">
+                      <Users className="w-6 h-6 text-[#3D5A40]" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-[#5A6B5F]">Total Users</p>
+                      <p className="text-2xl font-serif font-bold text-[#2C3E3C]">
+                        {stats?.totalUsers || 0}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card className="bg-white border-[#3D5A40]/10 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-[#5A6B5F] flex items-center gap-2">
-                <UserCheck className="w-4 h-4" />
-                Approved Users
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-[#2C3E3C]">
-                {statsLoading ? "..." : stats?.approvedUsers ?? 0}
-              </div>
-            </CardContent>
-          </Card>
+              <Card className="polaroid-card">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-[#3D5A40]/10 rounded-lg">
+                      <User className="w-6 h-6 text-[#3D5A40]" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-[#5A6B5F]">Total People</p>
+                      <p className="text-2xl font-serif font-bold text-[#2C3E3C]">
+                        {stats?.totalPeople || 0}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card className="bg-white border-[#3D5A40]/10 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-[#5A6B5F] flex items-center gap-2">
-                <User className="w-4 h-4" />
-                Total People
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-[#2C3E3C]">
-                {statsLoading ? "..." : stats?.totalPeople ?? 0}
-              </div>
-            </CardContent>
-          </Card>
+              <Card className="polaroid-card">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-[#3D5A40]/10 rounded-lg">
+                      <ImageIcon className="w-6 h-6 text-[#3D5A40]" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-[#5A6B5F]">Total Photos</p>
+                      <p className="text-2xl font-serif font-bold text-[#2C3E3C]">
+                        {stats?.totalPhotos || 0}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card className="bg-white border-[#3D5A40]/10 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-[#5A6B5F] flex items-center gap-2">
-                <ImageIcon className="w-4 h-4" />
-                Total Photos
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-[#2C3E3C]">
-                {statsLoading ? "..." : stats?.totalPhotos ?? 0}
-              </div>
-            </CardContent>
-          </Card>
+              <Card className="polaroid-card">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-[#3D5A40]/10 rounded-lg">
+                      <MessageSquare className="w-6 h-6 text-[#3D5A40]" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-[#5A6B5F]">Total Comments</p>
+                      <p className="text-2xl font-serif font-bold text-[#2C3E3C]">
+                        {stats?.totalComments || 0}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
-          <Card className="bg-white border-[#3D5A40]/10 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-[#5A6B5F] flex items-center gap-2">
-                <MessageCircle className="w-4 h-4" />
-                Total Comments
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-[#2C3E3C]">
-                {statsLoading ? "..." : stats?.totalComments ?? 0}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+          {/* Tabs */}
+          <Tabs defaultValue="approvals" className="space-y-6">
+            <TabsList className="bg-white border border-[#3D5A40]/10">
+              <TabsTrigger value="approvals">User Approvals</TabsTrigger>
+              <TabsTrigger value="people">People</TabsTrigger>
+              <TabsTrigger value="partnerships">Partnerships</TabsTrigger>
+              <TabsTrigger value="media">Media</TabsTrigger>
+              <TabsTrigger value="comments">Comments</TabsTrigger>
+              <TabsTrigger value="export">Export</TabsTrigger>
+            </TabsList>
 
-        {/* Management Tabs */}
-        <Tabs defaultValue="approvals" className="space-y-4">
-          <TabsList className="bg-white border border-[#3D5A40]/10">
-            <TabsTrigger value="approvals">Pending Approvals</TabsTrigger>
-            <TabsTrigger value="comments">Recent Comments</TabsTrigger>
-            <TabsTrigger value="content">Content Management</TabsTrigger>
-            <TabsTrigger value="export">Export</TabsTrigger>
-          </TabsList>
-
-          {/* Pending Approvals Tab */}
-          <TabsContent value="approvals">
-            <Card className="bg-white border-[#3D5A40]/10 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
-              <CardHeader>
-                <CardTitle className="text-[#2C3E3C]">Pending User Approvals</CardTitle>
-                <CardDescription className="text-[#5A6B5F]">
-                  Review and approve new users to grant them access to the family archive
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {usersLoading ? (
-                  <p className="text-[#5A6B5F]">Loading...</p>
-                ) : !unapprovedUsers || unapprovedUsers.length === 0 ? (
-                  <Alert>
-                    <AlertDescription>No pending approvals</AlertDescription>
-                  </Alert>
-                ) : (
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Display Name</TableHead>
-                        <TableHead>Joined</TableHead>
-                        <TableHead>Action</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {unapprovedUsers.map((item) => (
-                        <TableRow key={item.user.id}>
-                          <TableCell>{item.user.name || "—"}</TableCell>
-                          <TableCell>{item.user.email || "—"}</TableCell>
-                          <TableCell>{item.profile?.displayName || "—"}</TableCell>
-                          <TableCell>{new Date(item.user.createdAt).toLocaleDateString()}</TableCell>
-                          <TableCell>
-                            <Button
-                              size="sm"
-                              onClick={() => handleApprove(item.user.id)}
-                              disabled={approveMutation.isPending}
-                              className="bg-[#3D5A40] hover:bg-[#2C3E3C] text-white"
-                            >
-                              <Check className="w-4 h-4 mr-1" />
-                              Approve
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Recent Comments Tab */}
-          <TabsContent value="comments">
-            <Card className="bg-white border-[#3D5A40]/10 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
-              <CardHeader>
-                <CardTitle className="text-[#2C3E3C]">Recent Comments</CardTitle>
-                <CardDescription className="text-[#5A6B5F]">
-                  Monitor and moderate comments across the family archive
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {commentsLoading ? (
-                  <p className="text-[#5A6B5F]">Loading...</p>
-                ) : !recentComments || recentComments.length === 0 ? (
-                  <Alert>
-                    <AlertDescription>No comments yet</AlertDescription>
-                  </Alert>
-                ) : (
-                  <div className="space-y-4">
-                    {recentComments.map((item) => (
-                      <div key={item.comment.id} className="border border-[#3D5A40]/10 rounded-lg p-4">
-                        <div className="flex justify-between items-start mb-2">
+            {/* User Approvals Tab */}
+            <TabsContent value="approvals">
+              <Card className="polaroid-card">
+                <CardContent className="p-6">
+                  <h2 className="text-2xl font-serif font-bold text-[#2C3E3C] mb-4">
+                    Pending User Approvals
+                  </h2>
+                  {unapprovedUsers && unapprovedUsers.length === 0 ? (
+                    <p className="text-center py-8 text-[#5A6B5F]">No pending approvals</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {unapprovedUsers?.map((item) => (
+                        <div
+                          key={item.user.id}
+                          className="flex items-center justify-between p-4 bg-[#F5F5F0] rounded-lg"
+                        >
                           <div>
                             <p className="font-medium text-[#2C3E3C]">
-                              {item.profile?.displayName || item.author.name || "Anonymous"}
+                              {item.profile?.displayName || "No name"}
                             </p>
-                            <p className="text-sm text-[#5A6B5F]">
-                              On: {item.person.firstName} {item.person.lastName}
-                            </p>
+                            <p className="text-sm text-[#5A6B5F]">{item.user.email}</p>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <Badge variant="outline" className="text-xs">
-                              {new Date(item.comment.createdAt).toLocaleDateString()}
-                            </Badge>
+                          <Button
+                            onClick={() => approveMutation.mutate({ userId: item.user.id })}
+                            disabled={approveMutation.isPending}
+                            className="bg-[#3D5A40] hover:bg-[#2C3E3C]"
+                          >
+                            <Check className="w-4 h-4 mr-2" />
+                            Approve
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* People Management Tab */}
+            <TabsContent value="people">
+              <PeopleManagement />
+            </TabsContent>
+
+            {/* Partnerships Management Tab */}
+            <TabsContent value="partnerships">
+              <PartnershipsManagement />
+            </TabsContent>
+
+            {/* Media Management Tab */}
+            <TabsContent value="media">
+              <MediaManagement />
+            </TabsContent>
+
+            {/* Comments Tab */}
+            <TabsContent value="comments">
+              <Card className="polaroid-card">
+                <CardContent className="p-6">
+                  <h2 className="text-2xl font-serif font-bold text-[#2C3E3C] mb-4">
+                    Recent Comments
+                  </h2>
+                  {recentComments && recentComments.length === 0 ? (
+                    <p className="text-center py-8 text-[#5A6B5F]">No comments yet</p>
+                  ) : (
+                    <div className="space-y-4">
+                      {recentComments?.map((item) => (
+                        <div
+                          key={item.comment.id}
+                          className="p-4 bg-[#F5F5F0] rounded-lg space-y-2"
+                        >
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <p className="text-sm text-[#5A6B5F]">
+                                By <strong>{item.profile?.displayName || item.author.name || "Unknown"}</strong> on{" "}
+                                <strong>
+                                  {item.person.firstName} {item.person.lastName}
+                                </strong>
+                              </p>
+                              <p className="text-[#2C3E3C] mt-1">{item.comment.body}</p>
+                              <p className="text-xs text-[#5A6B5F] mt-1">
+                                {new Date(item.comment.createdAt).toLocaleString()}
+                              </p>
+                            </div>
                             <Button
+                              variant="ghost"
                               size="sm"
-                              variant="destructive"
-                              onClick={() => handleDeleteComment(item.comment.id)}
-                              disabled={deleteCommentMutation.isPending}
+                              onClick={() => deleteCommentMutation.mutate({ id: item.comment.id })}
+                              className="text-[#8B4513] hover:text-[#6B3410] hover:bg-[#8B4513]/10"
                             >
-                              <Trash2 className="w-4 h-4" />
+                              Delete
                             </Button>
                           </div>
                         </div>
-                        <p className="text-[#2C3E3C]">{item.comment.body}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
 
-          {/* Content Management Tab */}
-          <TabsContent value="content">
-            <Card className="bg-white border-[#3D5A40]/10 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
-              <CardHeader>
-                <CardTitle className="text-[#2C3E3C]">Content Management</CardTitle>
-                <CardDescription className="text-[#5A6B5F]">
-                  Manage people, partnerships, and media in the family archive
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Alert>
-                  <AlertDescription>
-                    Content management features coming soon. This will include:
-                    <ul className="list-disc list-inside mt-2 space-y-1">
-                      <li>Add, edit, and delete people</li>
-                      <li>Manage partnerships and family relationships</li>
-                      <li>Bulk upload photos and documents</li>
-                      <li>Tag people in photos</li>
-                      <li>Set primary photos for people</li>
-                    </ul>
-                  </AlertDescription>
-                </Alert>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Export Tab */}
-          <TabsContent value="export">
-            <Card className="bg-white border-[#3D5A40]/10 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
-              <CardHeader>
-                <CardTitle className="text-[#2C3E3C]">Export Data</CardTitle>
-                <CardDescription className="text-[#5A6B5F]">
-                  Download a complete backup of your family archive data
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-[#5A6B5F] mb-4">
-                  Export all family data including people, relationships, media metadata, and comments 
-                  as a JSON file. Note: Image files are not included in the export, only their references.
-                </p>
-                <Button
-                  onClick={handleExport}
-                  className="bg-[#3D5A40] hover:bg-[#2C3E3C] text-white"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  Export JSON
-                </Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </main>
-    </div>
+            {/* Export Tab */}
+            <TabsContent value="export">
+              <Card className="polaroid-card">
+                <CardContent className="p-6">
+                  <h2 className="text-2xl font-serif font-bold text-[#2C3E3C] mb-4">
+                    Export Data
+                  </h2>
+                  <p className="text-[#5A6B5F] mb-6">
+                    Download all family archive data as a JSON file. This includes people,
+                    partnerships, media metadata, and user information. Note: Actual photo files
+                    must be downloaded separately from S3 using the file keys.
+                  </p>
+                  <Button
+                    onClick={handleExport}
+                    className="bg-[#3D5A40] hover:bg-[#2C3E3C]"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Export JSON
+                  </Button>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
     </>
   );
 }
