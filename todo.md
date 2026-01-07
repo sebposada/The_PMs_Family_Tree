@@ -141,3 +141,12 @@
 - [x] Total partnerships now: 58 (33 original + 25 new)
 - [x] Verify tree layout shows proper generational structure
 - [x] Test tree rendering with updated partnerships (44 tests passing)
+
+## Partnership Children (Parent-Child Relationships)
+- [x] Query existing partnership children records
+- [x] Identify missing parent-child relationships
+- [x] Create partnership children records for all families (63 relationships)
+- [x] Add partnership children for people born in 1800s (earliest generation) - 14 relationships
+- [x] Total partnership children now: 82 records (5 original + 77 new)
+- [x] Verify tree shows proper generational hierarchy with children under parents
+- [x] All 44 tests passing with data integrity validated
