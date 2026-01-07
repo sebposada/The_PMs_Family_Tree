@@ -168,6 +168,10 @@ export const appRouter = router({
         return await db.getChildrenForPartnership(input.partnershipId);
       }),
     
+    getAllChildren: approvedProcedure.query(async () => {
+      return await db.getAllPartnershipChildren();
+    }),
+    
     create: adminProcedure
       .input(z.object({
         partner1Id: z.number(),

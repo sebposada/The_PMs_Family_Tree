@@ -421,6 +421,13 @@ export async function getPartnershipsForChild(childId: number) {
   return result.map(r => r.partnership);
 }
 
+export async function getAllPartnershipChildren() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(partnershipChildren);
+}
+
 // ============ Media ============
 
 export async function createMedia(mediaData: InsertMedia) {

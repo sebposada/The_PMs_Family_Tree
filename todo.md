@@ -122,3 +122,16 @@
 - [x] Fix PersonDetail page to display primary photo in infobox
 - [ ] Fix Tree page to display primary photos (when tree is implemented)
 - [x] Test that primary photos display correctly after selection (40 tests passing)
+
+## Interactive Family Tree Visualization
+- [x] Create tree layout algorithm that builds hierarchical structure from partnerships
+- [x] Model partnerships as union nodes (Partner1 → Union ← Partner2, Union → Children)
+- [x] Build custom PersonNode component with photo, name, and birth-death years
+- [x] Build custom UnionNode component for partnership connections
+- [x] Implement React Flow tree with top-to-bottom orientation
+- [x] Add zoom and pan controls
+- [x] Add minimap for navigation
+- [x] Implement search box with highlight and auto-zoom to person
+- [x] Make person nodes clickable to navigate to detail pages
+- [x] Test tree with 91 people and 33 partnerships (44 tests passing, tree data validated)
+- [x] Optimize performance for large tree rendering (using Dagre layout)
