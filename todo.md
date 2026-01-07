@@ -135,3 +135,9 @@
 - [x] Make person nodes clickable to navigate to detail pages
 - [x] Test tree with 91 people and 33 partnerships (44 tests passing, tree data validated)
 - [x] Optimize performance for large tree rendering (using Dagre layout)
+
+## Family Tree Improvements
+- [x] Import user's additional partnerships from file (25 partnerships added)
+- [x] Total partnerships now: 58 (33 original + 25 new)
+- [x] Verify tree layout shows proper generational structure
+- [x] Test tree rendering with updated partnerships (44 tests passing)

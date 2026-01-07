@@ -1,0 +1,227 @@
+[
+    {
+      "id": 31001,
+      "partner1Id": 16,
+      "partner2Id": 30016,
+      "startDate": "2005-06-15T00:00:00.000Z",
+      "endDate": null,
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Kevin Smith (Smith Branch) marries Tagged Person (Test Data)"
+    },
+    {
+      "id": 31002,
+      "partner1Id": 17,
+      "partner2Id": 30017,
+      "startDate": "2008-09-20T00:00:00.000Z",
+      "endDate": null,
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Lisa Smith (Smith Branch) marries Untagged Person (Test Data)"
+    },
+    {
+      "id": 31003,
+      "partner1Id": 18,
+      "partner2Id": 30018,
+      "startDate": "2012-05-01T00:00:00.000Z",
+      "endDate": null,
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Brian Wilson (Wilson Branch) marries Test Person (Test Data)"
+    },
+    {
+      "id": 31004,
+      "partner1Id": 21,
+      "partner2Id": 28,
+      "startDate": "1985-02-14T00:00:00.000Z",
+      "endDate": "1995-01-01T00:00:00.000Z",
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Steven Miller (Miller Branch) was married to Nancy Brown (Johnson Branch) - Links two main families"
+    },
+    {
+      "id": 31005,
+      "partner1Id": 24,
+      "partner2Id": 30023,
+      "startDate": "2015-07-04T00:00:00.000Z",
+      "endDate": null,
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Jessica Davis (Davis Branch) marries Partner One (Test Data)"
+    },
+    {
+      "id": 31006,
+      "partner1Id": 30,
+      "partner2Id": 30025,
+      "startDate": "2000-01-01T00:00:00.000Z",
+      "endDate": null,
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Mark Brown (Brown Branch) marries Partner Two (Test Data)"
+    },
+    {
+      "id": 31007,
+      "partner1Id": 53,
+      "partner2Id": 30033,
+      "startDate": "1990-10-31T00:00:00.000Z",
+      "endDate": null,
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Cousin Itt marries Tagged Person (Test Data)"
+    },
+    {
+      "id": 31008,
+      "partner1Id": 58,
+      "partner2Id": 30034,
+      "startDate": "2020-01-01T00:00:00.000Z",
+      "endDate": null,
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Timmy Miller (Miller Branch) marries Untagged Person (Test Data)"
+    },
+    {
+      "id": 31009,
+      "partner1Id": 61,
+      "partner2Id": 30041,
+      "startDate": "1988-08-08T00:00:00.000Z",
+      "endDate": null,
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Donny Johnson (Johnson Branch) marries Partner One (Test Data)"
+    },
+    {
+      "id": 31010,
+      "partner1Id": 77,
+      "partner2Id": 13,
+      "startDate": "1980-01-01T00:00:00.000Z",
+      "endDate": "1982-01-01T00:00:00.000Z",
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Greg House dated Susan Wilson - Links Easter Egg to Smith Family"
+    },
+    {
+      "id": 31011,
+      "partner1Id": 82,
+      "partner2Id": 6,
+      "startDate": "1998-01-01T00:00:00.000Z",
+      "endDate": "1999-01-01T00:00:00.000Z",
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Tony Stark dated Jennifer Smith before she married Michael - Links Avengers to Smith Family"
+    },
+    {
+      "id": 31012,
+      "partner1Id": 85,
+      "partner2Id": 31,
+      "startDate": "2005-01-01T00:00:00.000Z",
+      "endDate": "2008-01-01T00:00:00.000Z",
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Bruce Wayne was married to Sarah Davis (Smith Branch) - Links Batman to Smith Family"
+    },
+    {
+      "id": 31013,
+      "partner1Id": 79,
+      "partner2Id": 48,
+      "startDate": "2010-01-01T00:00:00.000Z",
+      "endDate": "2011-01-01T00:00:00.000Z",
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Sheldon Cooper dated Rebecca Johnson (Johnson Branch)"
+    },
+    {
+      "id": 31014,
+      "partner1Id": 64,
+      "partner2Id": 30042,
+      "startDate": "1980-01-01T00:00:00.000Z",
+      "endDate": "1984-01-01T00:00:00.000Z",
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Jenny Evans (Evans Branch) first marriage before Forrest"
+    },
+    {
+      "id": 31015,
+      "partner1Id": 30001,
+      "partner2Id": 30002,
+      "startDate": "2010-01-01T00:00:00.000Z",
+      "endDate": null,
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Links two Test Persons together to create a background family"
+    },
+    {
+      "id": 31016,
+      "partner1Id": 30006,
+      "partner2Id": 30058,
+      "startDate": "1995-01-01T00:00:00.000Z",
+      "endDate": null,
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Clear Photo marries Partner One (Test Data)"
+    },
+    {
+      "id": 31017,
+      "partner1Id": 30007,
+      "partner2Id": 30060,
+      "startDate": "2018-01-01T00:00:00.000Z",
+      "endDate": null,
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Partner One marries Single Person (Test Data)"
+    },
+    {
+      "id": 31018,
+      "partner1Id": 91,
+      "partner2Id": 85,
+      "startDate": "2016-01-01T00:00:00.000Z",
+      "endDate": null,
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Diana Prince (Wonder Woman) partnership with Bruce Wayne (Batman)"
+    },
+    {
+      "id": 31019,
+      "partner1Id": 54,
+      "partner2Id": 30067,
+      "startDate": "1960-01-01T00:00:00.000Z",
+      "endDate": null,
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Frank Miller (Miller Branch) second marriage to Tagged Person"
+    },
+    {
+      "id": 31020,
+      "partner1Id": 59,
+      "partner2Id": 30068,
+      "startDate": "1958-01-01T00:00:00.000Z",
+      "endDate": null,
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Walter Johnson (Johnson Branch) second marriage to Untagged Person"
+    },
+    {
+      "id": 31021,
+      "partner1Id": 51,
+      "partner2Id": 30062,
+      "startDate": "1950-01-01T00:00:00.000Z",
+      "endDate": null,
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Harold Smith (Smith Branch) second marriage to Parent Two"
+    },
+    {
+      "id": 31022,
+      "partner1Id": 30061,
+      "partner2Id": 30064,
+      "startDate": "2000-01-01T00:00:00.000Z",
+      "endDate": null,
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Parent One marries Parent Three (Test Data merger)"
+    },
+    {
+      "id": 31023,
+      "partner1Id": 45,
+      "partner2Id": 30063,
+      "startDate": "2020-01-01T00:00:00.000Z",
+      "endDate": null,
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "John Smith (Smith Branch) connection to Child One (Test Data)"
+    },
+    {
+      "id": 31024,
+      "partner1Id": 48,
+      "partner2Id": 30065,
+      "startDate": "2022-01-01T00:00:00.000Z",
+      "endDate": null,
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Rebecca Johnson (Johnson Branch) connection to Parent Four (Test Data)"
+    },
+    {
+      "id": 31025,
+      "partner1Id": 12,
+      "partner2Id": 30053,
+      "startDate": "1990-01-01T00:00:00.000Z",
+      "endDate": null,
+      "createdAt": "2026-01-07T04:05:00.000Z",
+      "note": "Thomas Smith (Smith Branch) connection to Test Person (Test Data)"
+    }
+]
