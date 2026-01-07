@@ -113,3 +113,12 @@
 - [x] Add media.getByPerson tRPC procedure
 - [x] Fix storage import path in upload.ts
 - [x] Test primary photo selection workflow (3 tests passing)
+
+## Primary Photo Display Bug
+- [x] Update getAllPeople query to join with media table and include primary photo URL
+- [x] Update getPersonById query to include primary photo URL
+- [x] Update searchPeople query to include primary photo URL
+- [x] Fix Directory page to display primary photo instead of placeholder
+- [x] Fix PersonDetail page to display primary photo in infobox
+- [ ] Fix Tree page to display primary photos (when tree is implemented)
+- [x] Test that primary photos display correctly after selection (40 tests passing)

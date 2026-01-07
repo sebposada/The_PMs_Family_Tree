@@ -134,9 +134,9 @@ function PersonDetailContent() {
               <CardContent className="p-6">
                 {/* Primary Photo */}
                 <div className="aspect-square bg-[#F5F5F0] rounded-lg mb-4 flex items-center justify-center overflow-hidden">
-                  {person.primaryMediaId ? (
+                  {person.primaryPhotoUrl ? (
                     <img
-                      src={`/api/media/${person.primaryMediaId}`}
+                      src={person.primaryPhotoUrl}
                       alt={`${person.firstName} ${person.lastName}`}
                       className="w-full h-full object-cover"
                     />

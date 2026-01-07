@@ -247,7 +247,26 @@ export async function getPersonById(id: number) {
   const db = await getDb();
   if (!db) return undefined;
   
-  const result = await db.select().from(people).where(eq(people.id, id)).limit(1);
+  const result = await db
+    .select({
+      id: people.id,
+      firstName: people.firstName,
+      lastName: people.lastName,
+      birthDate: people.birthDate,
+      deathDate: people.deathDate,
+      birthPlace: people.birthPlace,
+      deathPlace: people.deathPlace,
+      bioMarkdown: people.bioMarkdown,
+      primaryMediaId: people.primaryMediaId,
+      createdAt: people.createdAt,
+      updatedAt: people.updatedAt,
+      primaryPhotoUrl: media.url,
+    })
+    .from(people)
+    .leftJoin(media, eq(people.primaryMediaId, media.id))
+    .where(eq(people.id, id))
+    .limit(1);
+  
   return result[0];
 }
 
@@ -255,7 +274,25 @@ export async function getAllPeople() {
   const db = await getDb();
   if (!db) return [];
   
-  return await db.select().from(people);
+  const result = await db
+    .select({
+      id: people.id,
+      firstName: people.firstName,
+      lastName: people.lastName,
+      birthDate: people.birthDate,
+      deathDate: people.deathDate,
+      birthPlace: people.birthPlace,
+      deathPlace: people.deathPlace,
+      bioMarkdown: people.bioMarkdown,
+      primaryMediaId: people.primaryMediaId,
+      createdAt: people.createdAt,
+      updatedAt: people.updatedAt,
+      primaryPhotoUrl: media.url,
+    })
+    .from(people)
+    .leftJoin(media, eq(people.primaryMediaId, media.id));
+  
+  return result;
 }
 
 export async function searchPeople(query: string) {
@@ -264,8 +301,22 @@ export async function searchPeople(query: string) {
   
   const searchPattern = `%${query}%`;
   return await db
-    .select()
+    .select({
+      id: people.id,
+      firstName: people.firstName,
+      lastName: people.lastName,
+      birthDate: people.birthDate,
+      deathDate: people.deathDate,
+      birthPlace: people.birthPlace,
+      deathPlace: people.deathPlace,
+      bioMarkdown: people.bioMarkdown,
+      primaryMediaId: people.primaryMediaId,
+      createdAt: people.createdAt,
+      updatedAt: people.updatedAt,
+      primaryPhotoUrl: media.url,
+    })
     .from(people)
+    .leftJoin(media, eq(people.primaryMediaId, media.id))
     .where(
       or(
         like(people.firstName, searchPattern),
