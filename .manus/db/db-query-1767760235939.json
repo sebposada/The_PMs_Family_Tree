@@ -1,0 +1,130 @@
+{
+  "query": "SELECT \n  pc.partnershipId,\n  pc.childId,\n  CONCAT(child.firstName, ' ', child.lastName) as child_name,\n  YEAR(child.birthDate) as child_birth_year,\n  p.partner1Id,\n  p.partner2Id,\n  CONCAT(p1.firstName, ' ', p1.lastName) as partner1_name,\n  YEAR(p1.birthDate) as partner1_birth_year,\n  CONCAT(p2.firstName, ' ', p2.lastName) as partner2_name,\n  YEAR(p2.birthDate) as partner2_birth_year\nFROM partnership_children pc\nJOIN people child ON pc.childId = child.id\nJOIN partnerships p ON pc.partnershipId = p.id\nJOIN people p1 ON p.partner1Id = p1.id\nJOIN people p2 ON p.partner2Id = p2.id\nWHERE child.birthDate IS NOT NULL\nORDER BY child.birthDate DESC\nLIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 1ojTzELK7uqzVV4.root --database e59sCeDZ8CcqgFJitnrJ4q --execute SELECT \n  pc.partnershipId,\n  pc.childId,\n  CONCAT(child.firstName, ' ', child.lastName) as child_name,\n  YEAR(child.birthDate) as child_birth_year,\n  p.partner1Id,\n  p.partner2Id,\n  CONCAT(p1.firstName, ' ', p1.lastName) as partner1_name,\n  YEAR(p1.birthDate) as partner1_birth_year,\n  CONCAT(p2.firstName, ' ', p2.lastName) as partner2_name,\n  YEAR(p2.birthDate) as partner2_birth_year\nFROM partnership_children pc\nJOIN people child ON pc.childId = child.id\nJOIN partnerships p ON pc.partnershipId = p.id\nJOIN people p1 ON p.partner1Id = p1.id\nJOIN people p2 ON p.partner2Id = p2.id\nWHERE child.birthDate IS NOT NULL\nORDER BY child.birthDate DESC\nLIMIT 10;",
+  "rows": [
+    {
+      "partnershipId": "21",
+      "childId": "47",
+      "child_name": "Miles Smith",
+      "child_birth_year": "2018",
+      "partner1Id": "59",
+      "partner2Id": "60",
+      "partner1_name": "Walter Johnson",
+      "partner1_birth_year": "1927",
+      "partner2_name": "Peggy Johnson",
+      "partner2_birth_year": "1930"
+    },
+    {
+      "partnershipId": "17",
+      "childId": "37",
+      "child_name": "Olivia Johnson",
+      "child_birth_year": "2015",
+      "partner1Id": "48",
+      "partner2Id": "49",
+      "partner1_name": "Rebecca Johnson",
+      "partner1_birth_year": "1982",
+      "partner2_name": "Peter Parker",
+      "partner2_birth_year": "1980"
+    },
+    {
+      "partnershipId": "22",
+      "childId": "50",
+      "child_name": "May Parker",
+      "child_birth_year": "2012",
+      "partner1Id": "62",
+      "partner2Id": "63",
+      "partner1_name": "Larry Evans",
+      "partner1_birth_year": "1925",
+      "partner2_name": "Sally Evans",
+      "partner2_birth_year": "1930"
+    },
+    {
+      "partnershipId": "3",
+      "childId": "8",
+      "child_name": "David Smith",
+      "child_birth_year": "2010",
+      "partner1Id": "5",
+      "partner2Id": "6",
+      "partner1_name": "Michael Smith",
+      "partner1_birth_year": "1978",
+      "partner2_name": "Jennifer Smith",
+      "partner2_birth_year": "1980"
+    },
+    {
+      "partnershipId": "20",
+      "childId": "44",
+      "child_name": "Little Tim Evans",
+      "child_birth_year": "2010",
+      "partner1Id": "56",
+      "partner2Id": "57",
+      "partner1_name": "Bob Miller",
+      "partner1_birth_year": "1965",
+      "partner2_name": "Sue Miller",
+      "partner2_birth_year": "1968"
+    },
+    {
+      "partnershipId": "3",
+      "childId": "7",
+      "child_name": "Emily Smith",
+      "child_birth_year": "2008",
+      "partner1Id": "5",
+      "partner2Id": "6",
+      "partner1_name": "Michael Smith",
+      "partner1_birth_year": "1978",
+      "partner2_name": "Jennifer Smith",
+      "partner2_birth_year": "1980"
+    },
+    {
+      "partnershipId": "15",
+      "childId": "34",
+      "child_name": "Ryan Davis",
+      "child_birth_year": "2006",
+      "partner1Id": "42",
+      "partner2Id": "43",
+      "partner1_name": "Tom Evans",
+      "partner1_birth_year": "1978",
+      "partner2_name": "Rachel Evans",
+      "partner2_birth_year": "1980"
+    },
+    {
+      "partnershipId": "15",
+      "childId": "33",
+      "child_name": "Jessica Davis",
+      "child_birth_year": "2003",
+      "partner1Id": "42",
+      "partner2Id": "43",
+      "partner1_name": "Tom Evans",
+      "partner1_birth_year": "1978",
+      "partner2_name": "Rachel Evans",
+      "partner2_birth_year": "1980"
+    },
+    {
+      "partnershipId": "13",
+      "childId": "58",
+      "child_name": "Timmy Miller",
+      "child_birth_year": "1995",
+      "partner1Id": "38",
+      "partner2Id": "39",
+      "partner1_name": "Samuel Evans",
+      "partner1_birth_year": "1920",
+      "partner2_name": "Dorothy Evans",
+      "partner2_birth_year": "1922"
+    },
+    {
+      "partnershipId": "27",
+      "childId": "66",
+      "child_name": "Little Forrest Gump",
+      "child_birth_year": "1990",
+      "partner1Id": "73",
+      "partner2Id": "74",
+      "partner1_name": "Ben Johnson",
+      "partner1_birth_year": "1895",
+      "partner2_name": "Beth Johnson",
+      "partner2_birth_year": "1900"
+    }
+  ],
+  "messages": [],
+  "stdout": "partnershipId\tchildId\tchild_name\tchild_birth_year\tpartner1Id\tpartner2Id\tpartner1_name\tpartner1_birth_year\tpartner2_name\tpartner2_birth_year\n21\t47\tMiles Smith\t2018\t59\t60\tWalter Johnson\t1927\tPeggy Johnson\t1930\n17\t37\tOlivia Johnson\t2015\t48\t49\tRebecca Johnson\t1982\tPeter Parker\t1980\n22\t50\tMay Parker\t2012\t62\t63\tLarry Evans\t1925\tSally Evans\t1930\n3\t8\tDavid Smith\t2010\t5\t6\tMichael Smith\t1978\tJennifer Smith\t1980\n20\t44\tLittle Tim Evans\t2010\t56\t57\tBob Miller\t1965\tSue Miller\t1968\n3\t7\tEmily Smith\t2008\t5\t6\tMichael Smith\t1978\tJennifer Smith\t1980\n15\t34\tRyan Davis\t2006\t42\t43\tTom Evans\t1978\tRachel Evans\t1980\n15\t33\tJessica Davis\t2003\t42\t43\tTom Evans\t1978\tRachel Evans\t1980\n13\t58\tTimmy Miller\t1995\t38\t39\tSamuel Evans\t1920\tDorothy Evans\t1922\n27\t66\tLittle Forrest Gump\t1990\t73\t74\tBen Johnson\t1895\tBeth Johnson\t1900\n",
+  "stderr": "",
+  "execution_time_ms": 410
+}

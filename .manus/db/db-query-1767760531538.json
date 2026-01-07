@@ -1,0 +1,130 @@
+{
+  "query": "SELECT \n  CONCAT(p.firstName, ' ', p.lastName) as name,\n  YEAR(p.birthDate) as birth_year,\n  CASE \n    WHEN pc.childId IS NULL THEN 'ROOT (Gen 1)'\n    ELSE 'HAS PARENTS'\n  END as has_parents,\n  (SELECT COUNT(*) FROM partnership_children pc2 \n   JOIN partnerships part ON pc2.partnershipId = part.id \n   WHERE part.partner1Id = p.id OR part.partner2Id = p.id) as num_children\nFROM people p\nLEFT JOIN partnership_children pc ON p.id = pc.childId\nWHERE p.birthDate IS NOT NULL\nORDER BY p.birthDate\nLIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 1ojTzELK7uqzVV4.root --database e59sCeDZ8CcqgFJitnrJ4q --execute SELECT \n  CONCAT(p.firstName, ' ', p.lastName) as name,\n  YEAR(p.birthDate) as birth_year,\n  CASE \n    WHEN pc.childId IS NULL THEN 'ROOT (Gen 1)'\n    ELSE 'HAS PARENTS'\n  END as has_parents,\n  (SELECT COUNT(*) FROM partnership_children pc2 \n   JOIN partnerships part ON pc2.partnershipId = part.id \n   WHERE part.partner1Id = p.id OR part.partner2Id = p.id) as num_children\nFROM people p\nLEFT JOIN partnership_children pc ON p.id = pc.childId\nWHERE p.birthDate IS NOT NULL\nORDER BY p.birthDate\nLIMIT 20;",
+  "rows": [
+    {
+      "name": "George Smith",
+      "birth_year": "1890",
+      "has_parents": "HAS PARENTS",
+      "num_children": "4"
+    },
+    {
+      "name": "Carl Evans",
+      "birth_year": "1890",
+      "has_parents": "HAS PARENTS",
+      "num_children": "7"
+    },
+    {
+      "name": "Harry O'Connor",
+      "birth_year": "1890",
+      "has_parents": "HAS PARENTS",
+      "num_children": "3"
+    },
+    {
+      "name": "Molly O'Connor",
+      "birth_year": "1892",
+      "has_parents": "HAS PARENTS",
+      "num_children": "3"
+    },
+    {
+      "name": "Clara Evans",
+      "birth_year": "1895",
+      "has_parents": "HAS PARENTS",
+      "num_children": "7"
+    },
+    {
+      "name": "Martha Smith",
+      "birth_year": "1895",
+      "has_parents": "HAS PARENTS",
+      "num_children": "4"
+    },
+    {
+      "name": "Ben Johnson",
+      "birth_year": "1895",
+      "has_parents": "HAS PARENTS",
+      "num_children": "5"
+    },
+    {
+      "name": "Beth Johnson",
+      "birth_year": "1900",
+      "has_parents": "HAS PARENTS",
+      "num_children": "5"
+    },
+    {
+      "name": "Diana Prince",
+      "birth_year": "1900",
+      "has_parents": "ROOT (Gen 1)",
+      "num_children": "0"
+    },
+    {
+      "name": "Steve Trevor",
+      "birth_year": "1900",
+      "has_parents": "ROOT (Gen 1)",
+      "num_children": "0"
+    },
+    {
+      "name": "Jack Miller",
+      "birth_year": "1900",
+      "has_parents": "HAS PARENTS",
+      "num_children": "5"
+    },
+    {
+      "name": "Jill Miller",
+      "birth_year": "1905",
+      "has_parents": "HAS PARENTS",
+      "num_children": "5"
+    },
+    {
+      "name": "Arthur Smith",
+      "birth_year": "1920",
+      "has_parents": "HAS PARENTS",
+      "num_children": "3"
+    },
+    {
+      "name": "Samuel Evans",
+      "birth_year": "1920",
+      "has_parents": "HAS PARENTS",
+      "num_children": "3"
+    },
+    {
+      "name": "Samuel Evans",
+      "birth_year": "1920",
+      "has_parents": "HAS PARENTS",
+      "num_children": "3"
+    },
+    {
+      "name": "William Johnson",
+      "birth_year": "1920",
+      "has_parents": "HAS PARENTS",
+      "num_children": "2"
+    },
+    {
+      "name": "William Johnson",
+      "birth_year": "1920",
+      "has_parents": "HAS PARENTS",
+      "num_children": "2"
+    },
+    {
+      "name": "Dorothy Evans",
+      "birth_year": "1922",
+      "has_parents": "HAS PARENTS",
+      "num_children": "3"
+    },
+    {
+      "name": "Dorothy Evans",
+      "birth_year": "1922",
+      "has_parents": "HAS PARENTS",
+      "num_children": "3"
+    },
+    {
+      "name": "Margaret Smith",
+      "birth_year": "1922",
+      "has_parents": "ROOT (Gen 1)",
+      "num_children": "3"
+    }
+  ],
+  "messages": [],
+  "stdout": "name\tbirth_year\thas_parents\tnum_children\nGeorge Smith\t1890\tHAS PARENTS\t4\nCarl Evans\t1890\tHAS PARENTS\t7\nHarry O'Connor\t1890\tHAS PARENTS\t3\nMolly O'Connor\t1892\tHAS PARENTS\t3\nClara Evans\t1895\tHAS PARENTS\t7\nMartha Smith\t1895\tHAS PARENTS\t4\nBen Johnson\t1895\tHAS PARENTS\t5\nBeth Johnson\t1900\tHAS PARENTS\t5\nDiana Prince\t1900\tROOT (Gen 1)\t0\nSteve Trevor\t1900\tROOT (Gen 1)\t0\nJack Miller\t1900\tHAS PARENTS\t5\nJill Miller\t1905\tHAS PARENTS\t5\nArthur Smith\t1920\tHAS PARENTS\t3\nSamuel Evans\t1920\tHAS PARENTS\t3\nSamuel Evans\t1920\tHAS PARENTS\t3\nWilliam Johnson\t1920\tHAS PARENTS\t2\nWilliam Johnson\t1920\tHAS PARENTS\t2\nDorothy Evans\t1922\tHAS PARENTS\t3\nDorothy Evans\t1922\tHAS PARENTS\t3\nMargaret Smith\t1922\tROOT (Gen 1)\t3\n",
+  "stderr": "",
+  "execution_time_ms": 435
+}

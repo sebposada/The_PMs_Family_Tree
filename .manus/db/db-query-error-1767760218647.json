@@ -1,0 +1,8 @@
+{
+  "query": "SELECT \n  pc.partnership_id,\n  pc.child_id,\n  CONCAT(child.first_name, ' ', child.last_name) as child_name,\n  YEAR(child.birth_date) as child_birth_year,\n  p.partner1_id,\n  p.partner2_id,\n  CONCAT(p1.first_name, ' ', p1.last_name) as partner1_name,\n  YEAR(p1.birth_date) as partner1_birth_year,\n  CONCAT(p2.first_name, ' ', p2.last_name) as partner2_name,\n  YEAR(p2.birth_date) as partner2_birth_year\nFROM partnership_children pc\nJOIN people child ON pc.child_id = child.id\nJOIN partnerships p ON pc.partnership_id = p.id\nJOIN people p1 ON p.partner1_id = p1.id\nJOIN people p2 ON p.partner2_id = p2.id\nORDER BY child.birth_date DESC\nLIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 1ojTzELK7uqzVV4.root --database e59sCeDZ8CcqgFJitnrJ4q --execute SELECT \n  pc.partnership_id,\n  pc.child_id,\n  CONCAT(child.first_name, ' ', child.last_name) as child_name,\n  YEAR(child.birth_date) as child_birth_year,\n  p.partner1_id,\n  p.partner2_id,\n  CONCAT(p1.first_name, ' ', p1.last_name) as partner1_name,\n  YEAR(p1.birth_date) as partner1_birth_year,\n  CONCAT(p2.first_name, ' ', p2.last_name) as partner2_name,\n  YEAR(p2.birth_date) as partner2_birth_year\nFROM partnership_children pc\nJOIN people child ON pc.child_id = child.id\nJOIN partnerships p ON pc.partnership_id = p.id\nJOIN people p1 ON p.partner1_id = p1.id\nJOIN people p2 ON p.partner2_id = p2.id\nORDER BY child.birth_date DESC\nLIMIT 10;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'pc.child_id' in 'on clause'"
+  ]
+}

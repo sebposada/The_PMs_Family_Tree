@@ -181,9 +181,10 @@ function TreeContent() {
             onEdgesChange={onEdgesChange}
             nodeTypes={nodeTypes}
             fitView
+            fitViewOptions={{ padding: 0.2, minZoom: 0.1, maxZoom: 0.8 }}
             minZoom={0.1}
             maxZoom={2}
-            defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
+            defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
           >
             <Background color="#5A6B5F" gap={16} />
             <Controls className="bg-white border-[#3D5A40]/20" />

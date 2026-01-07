@@ -150,3 +150,11 @@
 - [x] Total partnership children now: 82 records (5 original + 77 new)
 - [x] Verify tree shows proper generational hierarchy with children under parents
 - [x] All 44 tests passing with data integrity validated
+
+## Tree Layout Fix (Generation-Based Hierarchy)
+- [x] Implement generation-based hierarchical layout algorithm
+- [x] Calculate generation levels from parent-child relationships
+- [x] Remove Dagre and implement custom layout with manual positioning
+- [x] Test tree displays with clear generational rows
+- [x] Clean up test data from database
+- [x] Tree now displays 59 real family members in generational hierarchy
