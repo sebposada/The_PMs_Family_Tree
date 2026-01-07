@@ -33,10 +33,8 @@ export function Navigation() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo/Title */}
-          <Link href={isAuthenticated ? "/directory" : "/"}>
-            <a className="text-xl font-serif font-bold text-[#2C3E3C] hover:text-[#3D5A40] transition-colors">
-              The PMs Family Archive
-            </a>
+          <Link href={isAuthenticated ? "/directory" : "/"} className="text-xl font-serif font-bold text-[#2C3E3C] hover:text-[#3D5A40] transition-colors">
+            The PMs Family Archive
           </Link>
 
           {/* Desktop Navigation */}
@@ -44,16 +42,16 @@ export function Navigation() {
             {isAuthenticated && (
               <>
                 {navLinks.map((link) => (
-                  <Link key={link.href} href={link.href}>
-                    <a
-                      className={`text-sm font-medium transition-colors ${
-                        location === link.href
-                          ? "text-[#3D5A40] font-semibold"
-                          : "text-[#5A6B5F] hover:text-[#3D5A40]"
-                      }`}
-                    >
-                      {link.label}
-                    </a>
+                  <Link 
+                    key={link.href} 
+                    href={link.href}
+                    className={`text-sm font-medium transition-colors ${
+                      location === link.href
+                        ? "text-[#3D5A40] font-semibold"
+                        : "text-[#5A6B5F] hover:text-[#3D5A40]"
+                    }`}
+                  >
+                    {link.label}
                   </Link>
                 ))}
                 <div className="flex items-center gap-2 ml-4 pl-4 border-l border-[#3D5A40]/10">
@@ -95,17 +93,17 @@ export function Navigation() {
           <div className="md:hidden py-4 border-t border-[#3D5A40]/10">
             <div className="flex flex-col gap-3">
               {navLinks.map((link) => (
-                <Link key={link.href} href={link.href}>
-                  <a
-                    className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      location === link.href
-                        ? "bg-[#3D5A40]/10 text-[#3D5A40]"
-                        : "text-[#5A6B5F] hover:bg-[#F5F5F0]"
-                    }`}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {link.label}
-                  </a>
+                <Link 
+                  key={link.href} 
+                  href={link.href}
+                  className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    location === link.href
+                      ? "bg-[#3D5A40]/10 text-[#3D5A40]"
+                      : "text-[#5A6B5F] hover:bg-[#F5F5F0]"
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.label}
                 </Link>
               ))}
               <div className="pt-3 mt-3 border-t border-[#3D5A40]/10">

@@ -81,3 +81,6 @@
 - [x] Successfully seed database with 8 people across 3 generations
 - [ ] Test admin user approval workflow (ready to test)
 - [x] Verify all navigation links work correctly
+
+## Current Issues
+- [x] Fix nested anchor tag error in Directory page (Navigation component had nested <a> tags inside <Link>)
