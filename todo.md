@@ -178,3 +178,8 @@
 - [x] Fix tree rendering issues (switched to ReactFlow, fixed useNodesState initialization)
 - [x] Restore navigation bar to tree page
 - [x] Test tree page - tree now renders with 37 people and 30 edges
+
+## Bug Fix: Infinite Loop in Tree Page
+- [x] Remove problematic useEffect that causes infinite re-renders
+- [x] Fix nodes/edges state initialization with ref-based change detection
+- [x] Test tree page - infinite loop error resolved, tree renders correctly

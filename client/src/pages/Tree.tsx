@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import ReactFlow, {
   Node,
   Edge,
@@ -207,15 +207,27 @@ export default function Tree() {
     return { nodes, edges };
   }, [people, partnerships, partnershipChildren]);
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  // Update nodes and edges when data changes
+  // Update nodes and edges when data changes (using key to track if update is needed)
+  const prevDataRef = React.useRef({ peopleLen: 0, partnershipsLen: 0, childrenLen: 0 });
+  
   useEffect(() => {
-    console.log('useEffect: updating nodes and edges', initialNodes.length, initialEdges.length);
-    setNodes(initialNodes);
-    setEdges(initialEdges);
-  }, [initialNodes, initialEdges, setNodes, setEdges]);
+    const currentData = { 
+      peopleLen: people.length, 
+      partnershipsLen: partnerships.length, 
+      childrenLen: partnershipChildren.length 
+    };
+    
+    // Only update if data has actually changed
+    if (JSON.stringify(currentData) !== JSON.stringify(prevDataRef.current)) {
+      console.log('Data changed, updating nodes and edges');
+      prevDataRef.current = currentData;
+      setNodes(initialNodes);
+      setEdges(initialEdges);
+    }
+  }, [people.length, partnerships.length, partnershipChildren.length, initialNodes, initialEdges, setNodes, setEdges]);
 
   // Search functionality
   const filteredPeople = useMemo(() => {
