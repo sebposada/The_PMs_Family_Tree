@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RouteGuard } from "@/components/RouteGuard";
+import { Navigation } from "@/components/Navigation";
 import { trpc } from "@/lib/trpc";
 import { Search, User } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -57,6 +58,7 @@ function DirectoryContent() {
 
   return (
     <div className="min-h-screen bg-[#FAF7F2]">
+      <Navigation />
       {/* Header */}
       <header className="border-b border-[#3D5A40]/10 bg-white/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-6">

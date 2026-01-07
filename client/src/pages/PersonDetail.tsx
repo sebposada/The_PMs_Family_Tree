@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Navigation } from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -83,26 +84,34 @@ function PersonDetailContent() {
 
   if (personLoading) {
     return (
-      <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center">
-        <p className="text-[#5A6B5F]">Loading...</p>
-      </div>
+      <>
+        <Navigation />
+        <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center">
+          <p className="text-[#5A6B5F]">Loading...</p>
+        </div>
+      </>
     );
   }
 
   if (!person) {
     return (
-      <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center">
-        <Alert>
-          <AlertDescription>Person not found</AlertDescription>
-        </Alert>
-      </div>
+      <>
+        <Navigation />
+        <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center">
+          <Alert>
+            <AlertDescription>Person not found</AlertDescription>
+          </Alert>
+        </div>
+      </>
     );
   }
 
   const photoSlides = photos?.map((p) => ({ src: p.url })) || [];
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2]">
+    <>
+      <Navigation />
+      <div className="min-h-screen bg-[#FAF7F2]">
       {/* Header */}
       <header className="border-b border-[#3D5A40]/10 bg-white/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-6">
@@ -368,6 +377,7 @@ function PersonDetailContent() {
       {/* Lightbox */}
       <Lightbox open={lightboxOpen} close={() => setLightboxOpen(false)} slides={photoSlides} index={lightboxIndex} />
     </div>
+    </>
   );
 }
 

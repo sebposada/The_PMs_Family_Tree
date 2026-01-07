@@ -15,6 +15,13 @@
       "when": 1767607418068,
       "tag": "0001_productive_masked_marvel",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1767749890885,
+      "tag": "0002_rich_giant_girl",
+      "breakpoints": true
     }
   ]
 }

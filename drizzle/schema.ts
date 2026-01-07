@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, boolean, unique, primaryKey } from "drizzle-orm/mysql-core";
+import { boolean, date, int, mysqlEnum, mysqlTable, primaryKey, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -40,8 +40,8 @@ export const people = mysqlTable("people", {
   id: int("id").autoincrement().primaryKey(),
   firstName: varchar("firstName", { length: 255 }).notNull(),
   lastName: varchar("lastName", { length: 255 }).notNull(),
-  birthDate: timestamp("birthDate"),
-  deathDate: timestamp("deathDate"),
+  birthDate: date("birthDate"),
+  deathDate: date("deathDate"),
   birthPlace: text("birthPlace"),
   deathPlace: text("deathPlace"),
   bioMarkdown: text("bioMarkdown"),
@@ -60,8 +60,8 @@ export const partnerships = mysqlTable("partnerships", {
   id: int("id").autoincrement().primaryKey(),
   partner1Id: int("partner1Id").notNull().references(() => people.id, { onDelete: "cascade" }),
   partner2Id: int("partner2Id").notNull().references(() => people.id, { onDelete: "cascade" }),
-  startDate: timestamp("startDate"),
-  endDate: timestamp("endDate"),
+  startDate: date("startDate"),
+  endDate: date("endDate"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 

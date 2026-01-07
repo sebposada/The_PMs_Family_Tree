@@ -1,4 +1,5 @@
 import { Input } from "@/components/ui/input";
+import { Navigation } from "@/components/Navigation";
 import { RouteGuard } from "@/components/RouteGuard";
 import { trpc } from "@/lib/trpc";
 import { Search, Image as ImageIcon } from "lucide-react";
@@ -31,7 +32,9 @@ function PhotosContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2]">
+    <>
+      <Navigation />
+      <div className="min-h-screen bg-[#FAF7F2]">
       {/* Header */}
       <header className="border-b border-[#3D5A40]/10 bg-white/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-6">
@@ -93,6 +96,7 @@ function PhotosContent() {
       {/* Lightbox */}
       <Lightbox open={lightboxOpen} close={() => setLightboxOpen(false)} slides={photoSlides} index={lightboxIndex} />
     </div>
+    </>
   );
 }
 

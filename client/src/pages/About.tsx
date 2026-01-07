@@ -1,10 +1,13 @@
 import { Card, CardContent } from "@/components/ui/card";
+import { Navigation } from "@/components/Navigation";
 import { RouteGuard } from "@/components/RouteGuard";
 import { BookOpen } from "lucide-react";
 
 function AboutContent() {
   return (
-    <div className="min-h-screen bg-[#FAF7F2]">
+    <>
+      <Navigation />
+      <div className="min-h-screen bg-[#FAF7F2]">
       {/* Header */}
       <header className="border-b border-[#3D5A40]/10 bg-white/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-6">
@@ -67,6 +70,7 @@ function AboutContent() {
         </Card>
       </main>
     </div>
+    </>
   );
 }
 
