@@ -163,3 +163,12 @@
 - [x] Investigate admin page for duplicate person-91 key
 - [x] Fix duplicate key issue in admin component (added deduplication to PeopleManagement, PartnershipsManagement, MediaManagement)
 - [x] Test admin page to verify error is resolved (all tabs tested, no console errors, 44 tests passing)
+
+## Family Tree Rebuild (Using @alexbrand09/famtreejs Library)
+- [x] Install @alexbrand09/famtreejs library
+- [x] Transform our data model to match library's format (people + partnerships)
+- [x] Create custom PersonCard component matching our design
+- [x] Replace Tree.tsx implementation with FamilyTree component
+- [x] Configure orientation, spacing, and styling
+- [x] Test with real family data - tree now displays with proper hierarchical structure
+- [x] Remove old treeLayout.ts, PersonNode.tsx, UnionNode.tsx files
