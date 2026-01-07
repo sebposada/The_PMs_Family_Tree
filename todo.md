@@ -103,3 +103,13 @@
 - [x] Import real people data from JSON (91 people)
 - [x] Import partnerships data from JSON (33 partnerships)
 - [x] Verify data imported correctly (91 people showing in directory)
+
+## Primary Photo Feature
+- [x] Add "Set Primary Photo" button to People Management edit form
+- [x] Show available photos where the person is tagged
+- [x] Allow selecting a photo to set as primary profile photo
+- [x] Update person's primaryMediaId when photo is selected
+- [x] Display current primary photo in the edit form
+- [x] Add media.getByPerson tRPC procedure
+- [x] Fix storage import path in upload.ts
+- [x] Test primary photo selection workflow (3 tests passing)

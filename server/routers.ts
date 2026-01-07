@@ -253,6 +253,12 @@ export const appRouter = router({
         return await db.searchPhotos(input.query);
       }),
     
+    getByPerson: approvedProcedure
+      .input(z.object({ personId: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getMediaForPerson(input.personId);
+      }),
+    
     create: adminProcedure
       .input(z.object({
         fileKey: z.string(),

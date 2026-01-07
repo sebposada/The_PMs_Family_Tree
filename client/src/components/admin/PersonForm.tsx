@@ -4,10 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { User } from "lucide-react";
 
 interface PersonFormProps {
   open: boolean;
@@ -39,6 +41,13 @@ export function PersonForm({ open, onOpenChange, person, onSuccess }: PersonForm
   const [deathPlace, setDeathPlace] = useState(person?.deathPlace || "");
   const [bioMarkdown, setBioMarkdown] = useState(person?.bioMarkdown || "");
   const [showPreview, setShowPreview] = useState(false);
+  const [selectedPhotoId, setSelectedPhotoId] = useState<number | null>(person?.primaryMediaId || null);
+
+  // Fetch photos tagged with this person
+  const { data: personPhotos } = trpc.media.getByPerson.useQuery(
+    { personId: person?.id || 0 },
+    { enabled: !!person?.id }
+  );
 
   const utils = trpc.useUtils();
   const createMutation = trpc.people.create.useMutation({
@@ -78,7 +87,21 @@ export function PersonForm({ open, onOpenChange, person, onSuccess }: PersonForm
     setDeathPlace("");
     setBioMarkdown("");
     setShowPreview(false);
+    setSelectedPhotoId(null);
   };
+
+  useEffect(() => {
+    if (person) {
+      setFirstName(person.firstName);
+      setLastName(person.lastName);
+      setBirthDate(person.birthDate ? new Date(person.birthDate).toISOString().split("T")[0] : "");
+      setDeathDate(person.deathDate ? new Date(person.deathDate).toISOString().split("T")[0] : "");
+      setBirthPlace(person.birthPlace || "");
+      setDeathPlace(person.deathPlace || "");
+      setBioMarkdown(person.bioMarkdown || "");
+      setSelectedPhotoId(person.primaryMediaId || null);
+    }
+  }, [person]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,6 +119,7 @@ export function PersonForm({ open, onOpenChange, person, onSuccess }: PersonForm
       birthPlace: birthPlace.trim() || undefined,
       deathPlace: deathPlace.trim() || undefined,
       bioMarkdown: bioMarkdown.trim() || undefined,
+      primaryMediaId: selectedPhotoId || undefined,
     };
 
     if (person) {
@@ -184,6 +208,70 @@ export function PersonForm({ open, onOpenChange, person, onSuccess }: PersonForm
               />
             </div>
           </div>
+
+          {/* Primary Photo Selector */}
+          {person && (
+            <div className="space-y-3">
+              <Label>Primary Profile Photo</Label>
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <Avatar className="h-24 w-24 border-2 border-[#3D5A40]/20">
+                    {selectedPhotoId && personPhotos?.find(p => p.id === selectedPhotoId) ? (
+                      <AvatarImage src={personPhotos.find(p => p.id === selectedPhotoId)?.url} />
+                    ) : (
+                      <AvatarFallback className="bg-[#F5F5F0]">
+                        <User className="h-12 w-12 text-[#5A6B5F]" />
+                      </AvatarFallback>
+                    )}
+                  </Avatar>
+                </div>
+                <div className="flex-1">
+                  {personPhotos && personPhotos.length > 0 ? (
+                    <>
+                      <p className="text-sm text-[#5A6B5F] mb-2">
+                        Select a photo from those tagged with {firstName}:
+                      </p>
+                      <div className="grid grid-cols-4 gap-2 max-h-[200px] overflow-y-auto p-2 border border-[#3D5A40]/20 rounded-lg bg-[#F5F5F0]">
+                        {personPhotos.map((photo) => (
+                          <button
+                            key={photo.id}
+                            type="button"
+                            onClick={() => setSelectedPhotoId(photo.id)}
+                            className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                              selectedPhotoId === photo.id
+                                ? "border-[#3D5A40] ring-2 ring-[#3D5A40]/30"
+                                : "border-transparent hover:border-[#3D5A40]/50"
+                            }`}
+                          >
+                            <img
+                              src={photo.url}
+                              alt={photo.caption || ""}
+                              className="w-full h-full object-cover"
+                            />
+                          </button>
+                        ))}
+                      </div>
+                      {selectedPhotoId && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setSelectedPhotoId(null)}
+                          className="mt-2 text-[#8B4513]"
+                        >
+                          Clear Selection
+                        </Button>
+                      )}
+                    </>
+                  ) : (
+                    <p className="text-sm text-[#5A6B5F] italic">
+                      No photos tagged with this person yet. Upload photos in Media Management and tag {firstName} to select a primary photo.
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Bio Field */}
           <div className="space-y-2">
